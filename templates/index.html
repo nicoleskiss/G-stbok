@@ -1,0 +1,43 @@
+{% extends "base.html" %}  <!-- Samma layout som base.html -->
+
+{% block title %}Gästbok{% endblock %}
+
+{% block content %}
+<h1>Skriv i gästboken</h1>
+
+<!-- Formulär för nya inlägg -->
+<form action="{{ url_for('submit') }}" method="post">
+  <label for="name">Namn</label><br>
+  <input id="name" name="name" type="text" maxlength="60"><br><br>
+
+  <label for="email">E-post (valfritt)</label><br>
+  <input id="email" name="email" type="email" maxlength="100"><br><br>
+
+  <label for="comment">Meddelande</label><br>
+  <textarea id="comment" name="comment" rows="5" cols="50" required></textarea><br><br>
+
+  <button type="submit">Skicka</button>
+</form>
+
+<hr>
+
+<h2>Inlägg</h2>
+{% if entries %}
+  <div class="entries">
+    {% for entry in entries %}
+      <article class="entry">
+        <header>
+          <strong>{{ entry.name }}</strong>  <!-- Visar namn -->
+          <small>— {{ entry.time }}</small>  <!-- Visar tidpunkt -->
+          {% if entry.email %}
+            <div class="email"><a href="mailto:{{ entry.email }}">{{ entry.email }}</a></div>
+          {% endif %}
+        </header>
+        <p>{{ entry.comment | e | replace('\n','<br>') | safe }}</p>
+      </article>
+    {% endfor %}
+  </div>
+{% else %}
+  <p>Inga inlägg ännu — var först!</p>
+{% endif %}
+{% endblock %}
